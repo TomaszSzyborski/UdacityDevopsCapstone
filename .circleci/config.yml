@@ -409,8 +409,7 @@ workflows:
   default:
     jobs:
 #      - my-bucket
-      - test-backend:
-          requires: [build-backend]
+      - scan-backend:
 #      - deploy-infrastructure:
 #          requires: [test-backend]
 #          filters:
