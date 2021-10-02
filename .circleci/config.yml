@@ -40,11 +40,11 @@ jobs:
           command: pip install flake8 pylama
       - run:
           name: Run flake8 scan
-          working_directory: ./app/rest_introduction_app
+          working_directory: ./app/
           command: flake8 --statistics
       - run:
           name: Run pylama scan
-          working_directory: ./app/rest_introduction_app
+          working_directory: ./app/
           command: pylama
 #
 #  deploy-infrastructure:
