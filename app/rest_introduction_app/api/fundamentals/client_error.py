@@ -5,8 +5,6 @@ from fastapi.params import Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from starlette import status
 
-from .core.responses import get_response
-
 router = APIRouter()
 
 security = HTTPBasic()
@@ -49,27 +47,27 @@ def unprocessable_entity(thing_id: int, body: dict):
     """
     raise HTTPException(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        detail=f"Oh nooo.... what did you did you?!"
+        detail="Oh nooo.... what did you did you?!"
     )
 
 
 @router.put("/things/{thing_id}")
-def unprocessable_entity(thing_id: int, body: dict):
+def unprocessable_entity_thing(thing_id: int, body: dict):
     """
     Try to put anything here
     """
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
-        detail=f"A-Team: there is BR instead of BA"
+        detail="A-Team: there is BR instead of BA"
     )
 
 
 @router.put("/server_operation/{operation_name}")
-def unprocessable_entity(operation_name: str, body: dict):
+def unprocessable_entity_operation(operation_name: str, body: dict):
     """
     Try to put anything here
     """
     raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        detail=f"https://www.youtube.com/watch?v=nzlDYKR5otM"
+        detail="https://www.youtube.com/watch?v=nzlDYKR5otM"
     )

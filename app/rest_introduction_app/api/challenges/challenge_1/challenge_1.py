@@ -5,13 +5,12 @@ Missions for:
 - Boron, Sand, helicopters (random helicopter crashes into crane) 422Bad request if helicopter is overloaded
 - Reactor building safety - percentages of Boron/Sand bags endpoint
 """
+import uuid
 # TODO finish
 from collections import namedtuple
 
 from fastapi import APIRouter, Request, status
-from pip._internal.utils.deprecation import deprecated
 from starlette.responses import JSONResponse
-import uuid
 
 from rest_introduction_app.api.challenges.authorization import AUTH_KEY, AUTH_KEY_VALUE, SECRET
 from rest_introduction_app.api.challenges.challenge_1.model import ChallengeSecret, PhoneCall, Comrade, Introduction
@@ -29,7 +28,7 @@ cleanup_mission = Mission("Boris Scherbina", "267-220-126", "The Cleanup")
 western_robots_mission = Mission("Boris Yeltzin", "998-423-239", "The Joker")
 bio_robots_mission = Mission("Valerij Legasov", "223-201-209", "The Bio Robots")
 
-#todo
+# todo
 # gejzery radioaktywnego betonu
 # flaga - in Soviet Russia the fire extinguishes you
 # flaga - in Soviet Russia the phonecall cancels you
@@ -100,7 +99,8 @@ async def list_food(request: Request):
         return JSONResponse(
             content={
                 "message": "I propose a stakan of vodka and a piece of lard!",
-                "mission": f"Make a phone call to >>{chernobyl_mission.person}<< about >>{chernobyl_mission.subject}<<.",
+                "mission":
+                    f"Make a phone call to >>{chernobyl_mission.person}<< about >>{chernobyl_mission.subject}<<.",
                 "phone_number": f"{chernobyl_mission.phone_number}"
             }
         )
@@ -138,11 +138,13 @@ async def phone_call(phone: PhoneCall, request: Request):
 
 # TODO finish it
 @router.post("/phone/{phone_number}")
-async def authorize(phone_number: str, phone_call: PhoneCall, request: Request):
+async def authorize_by_phone(phone_number: str, phone_call: PhoneCall, request: Request):
     data = {}
+
     if request.headers.get(AUTH_KEY) == AUTH_KEY_VALUE:
         data.update(
             content={
+                "information": f"you called {phone_call} for {phone_number}",
                 "message": "I propose a stakan of vodka and a piece of lard!",
                 "mission": "Make a phone call to Anatolij Diatlov.",
                 "phone_number": "234-980-321"

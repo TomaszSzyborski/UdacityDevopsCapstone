@@ -8,7 +8,7 @@ from dataclasses_json import dataclass_json
 from fastapi import APIRouter
 from pydantic.main import BaseModel
 from starlette import status
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 router = APIRouter(prefix="/challenge/primer")
 challenge_tag = "Challenge Primer - A warm-up for OUR testers!"
@@ -20,13 +20,13 @@ async def get_information():
     Get this resource to obtain mission debrief
     """
     return {
-        "message": f"Oi! W'at can I do for ya? "
-                   f"In this primer for challenges you'll learn how to look for flags. "
-                   f"Remember that this is not purely technical task. "
-                   f"You'll role play and use your knowledge to find treasures your looking for. "
-                   f"If you have any questions - ask. "
-                   f"Try and found as many flags as possible.(Five, there are five.) "
-                   f"begin with shooting at /tryout. "
+        "message": "Oi! W'at can I do for ya? "
+                   "In this primer for challenges you'll learn how to look for flags. "
+                   "Remember that this is not purely technical task. "
+                   "You'll role play and use your knowledge to find treasures your looking for. "
+                   "If you have any questions - ask. "
+                   "Try and found as many flags as possible.(Five, there are five.) "
+                   "begin with shooting at /tryout. "
     }
 
 
@@ -36,8 +36,8 @@ async def tryout():
     First steps in your CTF journey!
     """
     return {
-        "message": f"Good! Toy have tried to GET a resource."
-                   f"Now you have to GET something else... /flag"
+        "message": "Good! Toy have tried to GET a resource."
+                   "Now you have to GET something else... /flag"
     }
 
 
@@ -53,7 +53,7 @@ async def flag_info():
 
 
 @router.get("/flag/{flag_id}")
-async def flag_info(flag_id: int):
+async def flag_info_by_id(flag_id: int):
     """
     Fetch flags information (there are two flags here ;) )
     """
@@ -109,9 +109,9 @@ def login(user_registration: UserRegistration):
         content = {"message": f"Welcome, {user.username}, in the Primer!"}
         status_code = status.HTTP_202_ACCEPTED
         cookie = {"key": "session",
-                  "value": "${{flag_{user.uuid}_may_the_4th_b_with_u}}"}
+                  "value": f"${{flag_{user.uuid}_may_the_4th_b_with_u}}"}
     else:
-        content = {"message": f"Failed to login. Wrong username or password.",
+        content = {"message": "Failed to login. Wrong username or password.",
                    "flag": "${flag_naughty_aint_ya}"}
         status_code = status.HTTP_401_UNAUTHORIZED
     response = JSONResponse(content=content, status_code=status_code)

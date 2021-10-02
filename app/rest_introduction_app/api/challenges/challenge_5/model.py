@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 
 from dataclasses_json import dataclass_json
 from pydantic.main import BaseModel

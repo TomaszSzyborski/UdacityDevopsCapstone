@@ -8,8 +8,7 @@ Diatlov Pass
 """
 from typing import List
 
-from fastapi import APIRouter, Depends, Query
-from fastapi.params import Path
+from fastapi import APIRouter, Query
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
@@ -24,19 +23,19 @@ hiker = Hiker()
 # TODO add validation for pocket size items
 # TODO fill in responses or delete them
 item_responses = {
-        "map": "Probably a good choice... not to follow the voices in your head.",
-        "tent": "It is nice to have a piece of cloth over your head in the middle of nowhere...",
-        "knife": "Keep it sharp. You never know what you might need it for.",
-        "torch": "Shed some light on the unknown course of events.",
-        "camera": "Take pictures and preserve moments for yourself... or others.",
-        "lighter": "",
-        "matches": "",
-        "compass": "Follow the map to reach the northern Ural.",
-        "thermos": "Ahhh... a sip of hot tea reminds of home, doesn't it?",
-        "headlamp": "Go straight ahead, clear the path with a stream of light.",
-        "bottled_water": "",
-        "winter_jacket": "Hope you still own this jacket at the end of this journey :)",
-    }
+    "map": "Probably a good choice... not to follow the voices in your head.",
+    "tent": "It is nice to have a piece of cloth over your head in the middle of nowhere...",
+    "knife": "Keep it sharp. You never know what you might need it for.",
+    "torch": "Shed some light on the unknown course of events.",
+    "camera": "Take pictures and preserve moments for yourself... or others.",
+    "lighter": "",
+    "matches": "",
+    "compass": "Follow the map to reach the northern Ural.",
+    "thermos": "Ahhh... a sip of hot tea reminds of home, doesn't it?",
+    "headlamp": "Go straight ahead, clear the path with a stream of light.",
+    "bottled_water": "",
+    "winter_jacket": "Hope you still own this jacket at the end of this journey :)",
+}
 
 
 @router.get("/information", status_code=status.HTTP_200_OK)
@@ -79,7 +78,7 @@ async def add_to_backpack(item: Item):
         })
     else:
         raise HTTPException(status_code=400,
-                            detail=f"Your backpack is full already.")
+                            detail="Your backpack is full already.")
 
 
 @router.post("/add_to_pocket/{item}")
@@ -91,7 +90,7 @@ async def add_to_pocket(item: Item):
         })
     else:
         raise HTTPException(status_code=400,
-                            detail=f"Your pocket is full already.")
+                            detail="Your pocket is full already.")
 
 
 @router.patch("/swap_backpack_item/{item}", status_code=status.HTTP_201_CREATED)
@@ -105,8 +104,7 @@ async def swap_item(item_to_replace: Item,
 
 
 @router.patch("/swap_pocket_item/{item}", status_code=status.HTTP_201_CREATED)
-async def swap_item(item_to_replace: Item,
-                    item_to_pack: Item):
+async def swap_pocket_item(item_to_replace: Item, item_to_pack: Item):
     hiker.pocket.swap_item(item_to_replace, item_to_pack)
     return JSONResponse({
         "message": f"You've decided to take {item_to_pack.name} instead of {item_to_replace.name}. "

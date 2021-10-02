@@ -36,7 +36,7 @@ def create_cookie():
 
 
 @router.post("/register")
-def create_cookie(user_registration: UserRegistration):
+def register_user(user_registration: UserRegistration):
     user = User(user_registration.username, user_registration.password)
     if user in USERS:
         status_code = status.HTTP_400_BAD_REQUEST
@@ -50,20 +50,20 @@ def create_cookie(user_registration: UserRegistration):
 
 
 @router.post("/login")
-def create_cookie(user_registration: UserRegistration):
+def login(user_registration: UserRegistration):
     user = User(user_registration.username, user_registration.password)
     if user in USERS:
         content = {"message": f"Goooooood {user.username}, everything is proceeding just as I have foreseen it."}
         response = JSONResponse(content=content, status_code=status.HTTP_202_ACCEPTED)
         response.set_cookie(key="session", value=f"${user.uuid}_session_key")
     else:
-        content = {"message": f"Failed to login. Wrong username or password."}
+        content = {"message": "Failed to login. Wrong username or password."}
         response = JSONResponse(content=content, status_code=status.HTTP_401_UNAUTHORIZED)
     return response
 
 
 @router.get("/for_logged_in_users_only")
-def create_cookie(request: Request):
+def create_cookie_for_logged_in_user(request: Request):
     try:
         session_key = request.cookies.get("session")
         user = list(filter(lambda u: u.uuid in session_key, USERS))[0]
@@ -71,11 +71,10 @@ def create_cookie(request: Request):
             content = {"message": f"Observe this fully operational battle station, young {user.username}."}
             response = JSONResponse(content=content, status_code=status.HTTP_200_OK)
         else:
-            content = {"message": f"I find your lack of cookie disturbing..."}
+            content = {"message": "I find your lack of cookie disturbing..."}
             response = JSONResponse(content=content, status_code=status.HTTP_401_UNAUTHORIZED)
-    except:
-        content = {"message": f"I find your lack of cookie disturbing..."}
+    except Exception:
+        content = {"message": "I find your lack of cookie disturbing..."}
         response = JSONResponse(content=content, status_code=status.HTTP_401_UNAUTHORIZED)
 
     return response
-

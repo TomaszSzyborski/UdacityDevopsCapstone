@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Query, HTTPException, Depends, Path
+from fastapi import APIRouter, Query, HTTPException, Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from starlette import status
 from starlette.responses import JSONResponse
@@ -62,14 +62,14 @@ async def get_information():
     Get this resource to obtain mission debrief
     """
     return {
-        "message": f"You are the Genome Researcher. "
-                   f"You are meddling with Coronavirus SARS-Cov-2 RNA... "
-                   f"Try to change the RNA at your disposal to uncover as many medical breakthroughs as possible. "
-                   f"use GET /primary_sequence to see the original RNA strand "
-                   f"use GET /sample_sequence to create exact duplicate of original to perform experiments. "
-                   f"Try to change the RNA at your disposal to uncover as many medical breakthroughs as possible. "
-                   f"Good luck researcher. "
-                   f"Our souls fates' depend on you! "
+        "message": "You are the Genome Researcher. "
+                   "You are meddling with Coronavirus SARS-Cov-2 RNA... "
+                   "Try to change the RNA at your disposal to uncover as many medical breakthroughs as possible. "
+                   "use GET /primary_sequence to see the original RNA strand "
+                   "use GET /sample_sequence to create exact duplicate of original to perform experiments. "
+                   "Try to change the RNA at your disposal to uncover as many medical breakthroughs as possible. "
+                   "Good luck researcher. "
+                   "Our souls fates' depend on you! "
     }
 
 
@@ -84,7 +84,7 @@ async def register(credentials: TechnicianCheckIn):
         TECHNICIANS.append(lab_technician)
         status_code = status.HTTP_201_CREATED
         content["message"] = f"You have been registered {lab_technician.name}."
-        f"Take your hazmat suit, and do not forget about procedures!"
+        "Take your hazmat suit, and do not forget about procedures!"
 
     return JSONResponse(
         content=content,
@@ -281,8 +281,8 @@ async def nucleotide_replacement(nucleotide_id: int,
 
 
 @router.put("/nucleotides/", status_code=status.HTTP_200_OK)
-async def sequence_replacement(nucleotide_to_add: str = Query(..., min_length=1, max_length=1, regex="[AUCG]"),
-                               credentials: HTTPBasicCredentials = Depends(security)):
+async def nucleotides_replacement(nucleotide_to_add: str = Query(..., min_length=1, max_length=1, regex="[AUCG]"),
+                                  credentials: HTTPBasicCredentials = Depends(security)):
     if has_credentials(credentials):
         sequence["copy"] = nucleotide_to_add
         flags_completed = all_flags_collected(credentials)

@@ -24,16 +24,16 @@ async def get_information():
     Get this resource to obtain mission debrief
     """
     return {
-        "message": f"You are the Tech Commander of RBMK reactor power plant. "
-                   f"Your task is to perform the reactor test. "
-                   f"Bring the power level above 1000 but below 1500 and keep the reactor Operational. "
-                   f"Use /{{key}}/control_room/analysis to peek at reactor core. "
-                   f"Use /{{key}}/control_room to see full info about the reactor. "
-                   f"Check in at the /desk to get your key to control room. "
-                   f"Put in fuel rods or pull out control rods to raise the power. "
-                   f"Put in control rods or pull out fuel rods to decrease the power. "
-                   f"There are 12 flags to find. "
-                   f"Good luck Commander. "
+        "message": "You are the Tech Commander of RBMK reactor power plant. "
+                   "Your task is to perform the reactor test. "
+                   "Bring the power level above 1000 but below 1500 and keep the reactor Operational. "
+                   "Use /{{key}}/control_room/analysis to peek at reactor core. "
+                   "Use /{{key}}/control_room to see full info about the reactor. "
+                   "Check in at the /desk to get your key to control room. "
+                   "Put in fuel rods or pull out control rods to raise the power. "
+                   "Put in control rods or pull out fuel rods to decrease the power. "
+                   "There are 12 flags to find. "
+                   "Good luck Commander. "
     }
 
 
@@ -48,8 +48,8 @@ async def check_in(commander_check_in: CommanderCheckIn):
         commanders.append(commander)
         reactors.append(ReactorCore(commander.uuid))
         content = {
-            "message": f"Take the key to your control room. "
-                       f"Keep it safe. use it as resource path to check on your RMBK-100 reactor! "
+            "message": "Take the key to your control room. "
+                       "Keep it safe. use it as resource path to check on your RMBK-100 reactor! "
                        "Use following: /{key}/control_room to gain knowledge how to operate reactor. "
                        "You may see if the core is intact here: /{key}/reactor_core . "
                        "If anything goes wrong push AZ-5 safety button to put all control rods in place!"
@@ -163,13 +163,13 @@ async def manipulate_az_5(az_5_button: AZ5, key: str):
         if result == "BOOM!!!":
             return {
                 "sound": result,
-                "message": f"Do you taste metal?!",
+                "message": "Do you taste metal?!",
                 "flag": f"${{flag_dead_in_two_weeks_{commander.name}}}"
             }
         else:
             return {
                 "message": f"Right, Comrade {commander.name}, {result}. "
-                           f"Afraid of a meltdown, huh?",
+                           "Afraid of a meltdown, huh?",
                 "flag": f"${{flag_cherenkov_chicken_{commander.name}}}"
             }
     else:

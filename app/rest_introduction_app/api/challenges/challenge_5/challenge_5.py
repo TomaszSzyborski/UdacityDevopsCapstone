@@ -23,12 +23,9 @@ following flags:
 14. delete locked - shouldnt be deleted -
 15. try to get nonexistent resource
 """
-from typing import List, Dict
-import json
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from starlette import status
-from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from rest_introduction_app.api.challenges.challenge_5.model import Resource, ResourcesCollection, UserRegistration, User
@@ -43,14 +40,14 @@ async def get_information():
     Get this resource to obtain mission debrief
     """
     return {
-        "message": f"Welcome Collector. "
-                   f"Your purpose is collect. Have them all."
-                   f"And have them all logically. "
-                   f"Use every method at your fingertips to create logical flows "
-                   f"and retrieve as many flags as possible."
-                   f"Make us proud! And remember to show off your collection!"
-                   f"Remember to /register first"
-                   f"P.S. DO NOT DELETE /resource with id = 1!",
+        "message": "Welcome Collector. "
+                   "Your purpose is collect. Have them all."
+                   "And have them all logically. "
+                   "Use every method at your fingertips to create logical flows "
+                   "and retrieve as many flags as possible."
+                   "Make us proud! And remember to show off your collection!"
+                   "Remember to /register first"
+                   "P.S. DO NOT DELETE /resource with id = 1!",
         "CRITICAL": "Development in progress. Sorry, this challenge is not ready yet."
     }
 
@@ -118,34 +115,34 @@ all_methods = {
     "VIEW": "",
 }
 
-
 # TODO finish this function
-@router.api_route(path="/resource/{resource_id}", methods=list(all_methods.keys()), include_in_schema=False)
-async def collect_flag(resource_id: int, request: Request, credentials: HTTPBasicCredentials = Depends(security)):
-    if user := has_credentials(credentials):
-        try:
-            if request.method == "GET":
-                return RESOURCES.resources[user][resource_id]
-            elif request.method == "POST":
-                if resource_id in RESOURCES.resources[user].keys():
-                    payload = await request.json()
-                    RESOURCES.resources[user][resource_id] = Resource(**payload)
-                else:
-                    pass #TODO return already created
-            elif request.method == "PUT":
-                payload = await request.json()
-                RESOURCES.resources[user][resource_id] = Resource(**payload)
-            elif request.method == "PATCH":
-                for name, value in request.body().__dict__:
-                    RESOURCES.resources[user][resource_id].__setattr__(name, value)
-            # resource = RESOURCES.resources.get(user)[resource_id]
-            # result = method_actions.get(request.method)()
-            # return result
-
-        except KeyError:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"${{flag_whatcha_gettin?_{user.uuid}}}")
-        except Exception as e:
-            print(e)
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"{e=}")
+# @router.api_route(path="/resource/{resource_id}", methods=list(all_methods.keys()), include_in_schema=False)
+# async def collect_flag(resource_id: int, request: Request, credentials: HTTPBasicCredentials = Depends(security)):
+#     if user := has_credentials(credentials):
+#         try:
+#             if request.method == "GET":
+#                 return RESOURCES.resources[user][resource_id]
+#             elif request.method == "POST":
+#                 if resource_id in RESOURCES.resources[user].keys():
+#                     payload = await request.json()
+#                     RESOURCES.resources[user][resource_id] = Resource(**payload)
+#                 else:
+#                     # TODO return already created
+#                     pass
+#             elif request.method == "PUT":
+#                 payload = await request.json()
+#                 RESOURCES.resources[user][resource_id] = Resource(**payload)
+#             elif request.method == "PATCH":
+#                 for name, value in request.body().__dict__:
+#                     RESOURCES.resources[user][resource_id].__setattr__(name, value)
+#             # resource = RESOURCES.resources.get(user)[resource_id]
+#             # result = method_actions.get(request.method)()
+#             # return result
+#
+#         except KeyError:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                                 detail=f"${{flag_whatcha_gettin?_{user.uuid}}}")
+#         except Exception as e:
+#             print(e)
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                                 detail=f"{e=}")

@@ -2,9 +2,7 @@ import enum
 from dataclasses import dataclass
 from typing import List
 
-from pydantic import BaseModel
 from starlette.exceptions import HTTPException
-from starlette.responses import JSONResponse
 
 
 class Item(str, enum.Enum):
@@ -74,4 +72,3 @@ class Hiker:
     def set_to_default(self):
         self.backpack = Storage("backpack", 5)
         self.pocket = Storage("pocket", 2)
-

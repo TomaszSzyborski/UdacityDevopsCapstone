@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from rest_introduction_app.api.fundamentals import playing_with_headers, client_error, server_error, successful, \
-    basic_authentication, serving_images, cookies, token_authentication
+
+from rest_introduction_app.api.fundamentals import token_authentication
 
 app = FastAPI(
     title='HTTP - REST API training',

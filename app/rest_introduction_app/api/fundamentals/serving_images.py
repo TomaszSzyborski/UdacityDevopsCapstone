@@ -1,10 +1,8 @@
 import base64
 import io
-import secrets
 
-from fastapi import Depends, FastAPI, HTTPException, status, APIRouter
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from starlette.responses import JSONResponse, StreamingResponse, FileResponse
+from fastapi import status, APIRouter
+from starlette.responses import JSONResponse, StreamingResponse
 
 router = APIRouter()
 

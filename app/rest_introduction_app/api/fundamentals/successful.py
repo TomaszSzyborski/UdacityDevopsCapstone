@@ -4,8 +4,7 @@ from fastapi import APIRouter
 from starlette import status
 from starlette.responses import JSONResponse
 
-from rest_introduction_app.api.fundamentals.core.responses import get_response, post_response, put_response
-from rest_introduction_app.api.fundamentals.model.pong import Pong
+from rest_introduction_app.api.fundamentals.core.responses import get_response
 
 router = APIRouter()
 
@@ -40,7 +39,7 @@ async def get_people():
 
 
 @router.get("/get_all_people_sliced")
-async def get_people(from_number: int = None, up_to_number: int = None):
+async def get_people_sliced(from_number: int = None, up_to_number: int = None):
     """
     Endpoint to get all people from-to given number
     :return: list of people from-to numbers
@@ -49,7 +48,7 @@ async def get_people(from_number: int = None, up_to_number: int = None):
 
 
 @router.get("/get_all_people_paged")
-async def get_people(page_size: int, page_number: int = 0):
+async def get_people_paged(page_size: int, page_number: int = 0):
     """
     Endpoint to get all people
     :return: list of people by pages using given page size

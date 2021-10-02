@@ -20,15 +20,15 @@ async def get_information():
     Get this resource to obtain mission debrief
     """
     return {
-        "message": f"You are an Agent in Bureau of People's Internet Network Deciphering Agency. "
-                   f"You have received several messages that are currently stored in our system."
-                   f"Use /encrypted_message to retrieve message. "
-                   f"Then use your knowledge and tools at your disposal (other endpoints) "
-                   f"to decipher those messages. "
-                   f"Hurry though, the timer is set to 2 hours. After that time the messages "
-                   f"will be wiped out due to security reasons. "
-                   f"There are six flags waiting. "
-                   f"Don't fail me. "
+        "message": "You are an Agent in Bureau of People's Internet Network Deciphering Agency. "
+                   "You have received several messages that are currently stored in our system."
+                   "Use /encrypted_message to retrieve message. "
+                   "Then use your knowledge and tools at your disposal (other endpoints) "
+                   "to decipher those messages. "
+                   "Hurry though, the timer is set to 2 hours. After that time the messages "
+                   "will be wiped out due to security reasons. "
+                   "There are six flags waiting. "
+                   "Don't fail me. "
     }
 
 
@@ -102,7 +102,7 @@ async def encrypted_message(credentials: HTTPBasicCredentials = Depends(security
             flag = to_base64(flag)
             MESSAGES[user.uuid] = {}
             MESSAGES[user.uuid]["flag"] = flag
-            message_for_hq = f"We serve the People's Internet Network Deciphering Agency"
+            message_for_hq = "We serve the People's Internet Network Deciphering Agency"
             message_for_hq = to_base64(message_for_hq)
             message_for_hq = rot13(message_for_hq)
             message_for_hq = to_base64(message_for_hq)
@@ -121,7 +121,7 @@ async def encrypted_message(credentials: HTTPBasicCredentials = Depends(security
                     "message": MESSAGES.get(user.uuid).get("flag"),
                     "securityInformation": f"Codename {user.uuid}! You will see this message only once!",
                     "secret": "POST /{unique identification number}/headquarters with a decoded secret, "
-                              f"but first GET the secret from the /box"
+                              "but first GET the secret from the /box"
                 }
             )
             response.set_cookie("message", "UBURUBUBUBURUBUB")
@@ -160,10 +160,10 @@ async def final_message_post(user_uuid: str, hq_message: HQMessage,
                              credentials: HTTPBasicCredentials = Depends(security)):
     if has_credentials(credentials):
         content = {
-            "message": f"From Russia, With Love"
+            "message": "From Russia, With Love"
         }
 
-        if hq_message.message == f"We serve the People's Internet Network Deciphering Agency":
+        if hq_message.message == "We serve the People's Internet Network Deciphering Agency":
             content["flag"] = f"${{flag_you_know_how_acronyms_work_right?_{user_uuid}}}"
         else:
             content["flag"] = f"${{flag_not_yet_agent_{user_uuid}}}"
@@ -197,7 +197,7 @@ async def crypto_engine(user_uuid: str, method: str, message: str,
             return JSONResponse(
                 content=methods[method](message)
             )
-        except (Exception or KeyError) as e:
+        except (Exception or KeyError):
             return JSONResponse(
                 content={"message": "Wrong data to cipher or decipher",
                          "flag": f"${{flag_blind_testing_huh?_{user_uuid}}}"}
