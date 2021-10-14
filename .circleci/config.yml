@@ -46,23 +46,23 @@ jobs:
           name: Run pylama scan
           working_directory: ./app/
           command: pylama
-#
-#  deploy-infrastructure:
-#    docker:
-#      - image: amazon/aws-cli
-#    steps:
-#      - checkout
-#      - run:
-#          name: Install dependencies
-#          command: yum install -y tar gzip
-#      - run:
-#          name: Ensure back-end infrastructure exists
-#          command: |
-#            aws cloudformation deploy \
-#            --template .circleci/files/backend.yml \
-#            --tags project=rest-learning-backend \
-#            --stack-name "rest-learning-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-#            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yum install -y tar gzip
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+            --template .circleci/files/backend.yml \
+            --tags project=rest-learning-backend \
+            --stack-name "rest-learning-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 #      - run:
 #          name: Ensure front-end infrastructure exist
 #          command: |
@@ -71,73 +71,59 @@ jobs:
 #            --tags project=rest-learning-frontend \
 #            --stack-name "rest-learning-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
 #            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-#      - run:
-#          name: Add back-end ip to ansible inventory
-#          command: |
-#            BACKEND_IP=$(aws ec2 describe-instances \
-#            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-#            --filters "Name=tag:project,Values=rest-learning-backend" \
-#            --output text)
-#            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
-#            curl -H "Content-Type: text/plain" -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" \
-#            --request PUT \
-#            --data $BACKEND_IP \
-#            https://api.memstash.io/values/backend_ip
-#            cat .circleci/ansible/inventory.txt
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - ./project/.circleci/ansible/inventory.txt
-#      - destroy-environment
-#
-#  configure-infrastructure:
-#    docker:
-#      - image: python:3.7-alpine3.11
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: ~/
-#      - add_ssh_keys:
-#          fingerprints: ["d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"]
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            apk add --update tar gzip ansible nodejs npm curl
-#            pip install awscli
-#      - run:
-#          name: Set up inventory file
-#          command: |
-#            cd .circleci/ansible
-#            echo "[web]" >> inventory.txt
-#            URLS=$(curl -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" --request GET https://api.memstash.io/values/backend_ip)
-#            echo "$URLS" >> inventory.txt
-#            cat inventory.txt
-#      - run:
-#          name: Configure server with ansible
-#          no_output_timeout: 30m
-#          command: |
-#            echo ENVIRONMENT=production > "backend/.env"
-#            echo NODE_ENV=production >> "backend/.env"
-#            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-#            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-#            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-#            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-#            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-#            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-#            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-#            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-#            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-#            cat backend/.env
-#            cd .circleci/ansible
-#            ansible-playbook -i inventory.txt configure-server.yml
-##      - save_cache:
-##          paths: [ .circleci/ansible/inventory.txt ]
-##          key: infrastructure
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - ./project/.circleci/ansible/inventory.txt
-#      - destroy-environment
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            BACKEND_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=rest-learning-backend" \
+            --output text)
+            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
+            curl -H "Content-Type: text/plain" -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" \
+            --request PUT \
+            --data $BACKEND_IP \
+            https://api.memstash.io/values/backend_ip
+            cat .circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ./project/.circleci/ansible/inventory.txt
+      - destroy-environment
+
+  configure-infrastructure:
+    docker:
+      - image: python:3.9-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - add_ssh_keys:
+          fingerprints: ["d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip ansible nodejs npm curl
+            pip install awscli
+      - run:
+          name: Set up inventory file
+          command: |
+            cd .circleci/ansible
+            echo "[web]" >> inventory.txt
+            URLS=$(curl -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" --request GET https://api.memstash.io/values/backend_ip)
+            echo "$URLS" >> inventory.txt
+            cat inventory.txt
+      - run:
+          name: Configure server with ansible
+          no_output_timeout: 30m
+          command: |
+            cat backend/.env
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ./project/.circleci/ansible/inventory.txt
+      - destroy-environment
 #
 #  run-migrations:
 #    docker:
@@ -410,11 +396,11 @@ workflows:
     jobs:
 #      - my-bucket
       - scan-backend
-#      - deploy-infrastructure:
-#          requires: [test-backend]
-#          filters:
-#            branches:
-#              only: [main]
+      - deploy-infrastructure:
+          requires: [scan-backend]
+          filters:
+            branches:
+              only: [main]
 #      - configure-infrastructure:
 #          requires: [deploy-infrastructure]
 #      - run-migrations:

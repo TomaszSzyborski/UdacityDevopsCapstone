@@ -9,70 +9,15 @@
   apt:
     upgrade: yes
 
-- name: "install dependencies."
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
-
-- name: "install pm2"
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
-
-- name: "install typescript"
-  become: yes
-  npm:
-    name: typescript
-    global: yes
-    production: yes
-    state: present
-
-- name: " update dependencies"
-  become: true
-  shell: |
-    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    apt-get install -y nodejs
-    npm install --save glob
-
 - name: "Copy backend build to server"
   become: yes
   unarchive:
-    src:  /root/project/backend.tar.gz
+    src:  /root/project/app
     dest: /home/ubuntu
     owner: ubuntu
 
-- name: "Copy package.json to server"
-  become: yes
-  copy:
-    src: /root/project/backend/package.json
-    dest: /home/ubuntu/backend
-    owner: ubuntu
-
-- name: Build
+- name: Running docker compose
   become: true
   shell: |
-    cd /home/ubuntu/backend
-    npm install
-    npm fund
-    npm run build
-
-- name: "export .env"
-  become: yes
-  shell: |
-    export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
-    export TYPEORM_ENTITIES="{{ lookup('env', 'TYPEORM_ENTITIES') }}"
-    export TYPEORM_USERNAME="{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    export TYPEORM_PASSWORD="{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    export TYPEORM_DATABASE="{{ lookup('env', 'TYPEORM_DATABASE') }}"
-- name: Executing node
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    pm2 start --name backend npm -- start
-    npm run start:prod
-    pm2 ls
+    cd /home/ubuntu
+    docker-compose up --build --force-recreate
