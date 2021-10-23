@@ -1,5 +1,5 @@
 Description: >
-  Cloudfront distribution for UdaPeople.
+  Cloudfront distribution for RestAdventures.
 
 Parameters:
   WorkflowID:

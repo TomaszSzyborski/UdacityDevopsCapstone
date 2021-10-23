@@ -66,7 +66,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9-alpine3.11
     steps:
       - checkout
       - attach_workspace:
@@ -95,7 +95,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -127,7 +127,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9-alpine3.11
     steps:
       - checkout
       - run:
@@ -239,7 +239,7 @@ workflows:
     jobs:
       - scan-backend
       - deploy-infrastructure:
-          requires: [test-backend]
+          requires: [scan-backend]
           filters:
             branches:
               only: [main]
@@ -247,8 +247,8 @@ workflows:
           requires: [deploy-infrastructure]
       - deploy-backend:
           requires: [configure-infrastructure]
-      - smoke-test:
-          requires: [deploy-backend]
+     - smoke-test:
+         requires: [deploy-backend]
 #      - cloudfront-update:
 #          requires: [smoke-test]
 #      - cleanup:
