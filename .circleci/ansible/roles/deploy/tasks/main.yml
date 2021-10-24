@@ -9,15 +9,28 @@
   apt:
     upgrade: yes
 
+- name: "install dependencies."
+  become: yes
+  apt:
+    name: ["python3-distutils"]
+    state: latest
+    update_cache: yes
+
 - name: "Copy backend build to server"
   become: yes
   unarchive:
-    src:  /root/project/app
+    src:  /root/app
     dest: /home/ubuntu
     owner: ubuntu
 
-- name: Running docker compose
+- name: "Install python dependencies"
   become: true
   shell: |
     cd /home/ubuntu
-    docker-compose up --build --force-recreate
+    pip3 install -r requirements.txt
+
+- name: Executing rest-learning-app
+  become: true
+  shell: |
+    cd /home/ubuntu
+    ./shell_scripts/run_all.sh
