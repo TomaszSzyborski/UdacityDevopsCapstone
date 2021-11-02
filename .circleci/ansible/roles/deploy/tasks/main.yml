@@ -12,7 +12,7 @@
 - name: "install dependencies."
   become: yes
   apt:
-    name: ["python3-distutils"]
+    name: python3-distutils
     state: latest
     update_cache: yes
 
