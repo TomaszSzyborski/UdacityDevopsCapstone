@@ -71,7 +71,9 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: yum install -y tar gzip
+          command: |
+            apk add --update tar gzip ansible curl
+            pip install awscli
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
