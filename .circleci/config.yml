@@ -66,14 +66,13 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible curl
-            pip install awscli
+            yum install tar gzip ansible curl
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
