@@ -52,16 +52,10 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
-            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
             curl -H "Content-Type: text/plain" -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" \
             --request PUT \
             --data $BACKEND_IP \
             https://api.memstash.io/values/backend_ip
-            cat .circleci/ansible/inventory.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - ./project/.circleci/ansible/inventory.txt
       - destroy-environment
 
   configure-infrastructure:
