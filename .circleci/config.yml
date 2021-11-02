@@ -9,7 +9,6 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name rest-learning-backend-${CIRCLE_WORKFLOW_ID:0:7}
-#            aws s3 rb s3://rest-learning-${CIRCLE_WORKFLOW_ID:0:7} --force
 
 jobs:
   scan-backend:
@@ -70,6 +69,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
