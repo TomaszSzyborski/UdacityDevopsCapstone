@@ -72,7 +72,7 @@ jobs:
             apk add --update tar gzip curl
             pip install awscli
       - attach_workspace:
-          at: ~
+          at: ~/
       - run:
           name: Set up inventory file
           command: |
