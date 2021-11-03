@@ -1,6 +1,5 @@
 ---
 - name: "update apt packages."
-  debugger: always
   become: yes
   apt:
     update_cache: yes
