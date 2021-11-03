@@ -1,6 +1,5 @@
 ---
 - name: Configure rest-learning infrastructure
-  debugger: always
   hosts: web
   user: ubuntu
   gather_facts: false

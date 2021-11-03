@@ -1,5 +1,5 @@
 Description: >
-  UdaPeople backend stack.
+  REST Learning backend stack.
 
 Parameters:
   ID:
