@@ -19,7 +19,7 @@
 - name: "Copy backend build to server"
   become: yes
   copy:
-    src:  /root/app
+    src:  ~/project/app
     dest: /home/ubuntu
     owner: ubuntu
 
