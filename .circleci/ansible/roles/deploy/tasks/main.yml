@@ -18,7 +18,7 @@
 
 - name: "Copy backend build to server"
   become: yes
-  unarchive:
+  copy:
     src:  /root/app
     dest: /home/ubuntu
     owner: ubuntu
