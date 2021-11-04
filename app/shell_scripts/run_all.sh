@@ -10,4 +10,3 @@ nohup sh ./*/run_app.sh genetics_challenge 8085 \&
 nohup sh ./*/run_app.sh diatlov_pass_challenge 8086 \&
 nohup sh ./*/run_app.sh collector_challenge 8087 \&
 nohup sh ./*/run_app.sh catastrophy_challenge 8088 \&
-python ./*/sleeper.py
