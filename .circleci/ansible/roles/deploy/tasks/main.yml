@@ -26,8 +26,8 @@
 - name: "Copy backend build to server"
   become: yes
   copy:
-    src:  ~/project/app
-    dest: /home/ubuntu
+    src:  /root/project/app/
+    dest: /home/ubuntu/
     owner: ubuntu
 
 - name: "Install python dependencies"
