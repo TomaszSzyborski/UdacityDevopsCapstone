@@ -9,7 +9,14 @@
   apt:
     upgrade: yes
 
-- name: "install dependencies."
+- name: "install pip3."
+  become: yes
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: yes
+
+- name: "install distutils."
   become: yes
   apt:
     name: python3-distutils
@@ -27,7 +34,7 @@
   become: true
   shell: |
     cd /home/ubuntu
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 - name: Executing rest-learning-app
   become: true
