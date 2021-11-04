@@ -40,4 +40,5 @@
   become: true
   shell: |
     cd /home/ubuntu
+    chmod +x -R ./shell_scripts
     ./shell_scripts/run_all.sh
