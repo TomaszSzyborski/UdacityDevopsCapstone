@@ -53,9 +53,6 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
             MY_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
