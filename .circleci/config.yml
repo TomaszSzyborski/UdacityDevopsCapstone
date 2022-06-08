@@ -17,7 +17,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Setup custom environment variables"
+          name: Setup custom environment variables
           command: echo 'export BACKEND_IP=""' >> $BASH_ENV
       - run:
           name: Install flake8 and pylama for code quality scan
@@ -55,10 +55,6 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
-#            curl -H "Content-Type: text/plain" -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" \
-#            --request PUT \
-#            --data $BACKEND_IP \
-#            https://api.memstash.io/values/backend_ip
       - destroy-environment
 
   configure-infrastructure:
@@ -82,7 +78,6 @@ jobs:
           command: |
             cd .circleci/ansible
             echo "[web]" >> inventory.txt
-#            URLS=$(curl -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" --request GET https://api.memstash.io/values/backend_ip)
             URLS=$BACKEND_IP
             echo "$URLS" >> inventory.txt
             cat inventory.txt
