@@ -236,19 +236,21 @@ jobs:
 workflows:
   default:
     jobs:
-      - build:
-          context: BACKEND_IP
       - scan-backend
       - deploy-infrastructure:
+          context: BACKEND_IP
           requires: [scan-backend]
           filters:
             branches:
               only: [main]
       - configure-infrastructure:
+          context: BACKEND_IP
           requires: [deploy-infrastructure]
       - deploy-backend:
+          context: BACKEND_IP
           requires: [configure-infrastructure]
       - smoke-test:
+          context: BACKEND_IP
           requires: [deploy-backend]
 #      - cloudfront-update:
 #          requires: [smoke-test]
