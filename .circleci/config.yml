@@ -149,15 +149,15 @@ jobs:
                       --output text)
             URL="http://${BACKEND_URL}:8080/api/ok"
             echo $URL
-#            curl -s $URL
-#               if curl -s $URL
-#               then
-#               echo "Smoke test OK"
-#               return 0
-#               else
-#               echo "Smoke test failed"
-#               return 1
-#               fi
+            curl -s $URL
+               if curl -s $URL
+               then
+               echo "Smoke test OK"
+               return 0
+               else
+               echo "Smoke test failed"
+               return 1
+               fi
       - destroy-environment
 #
 #  cloudfront-update:
