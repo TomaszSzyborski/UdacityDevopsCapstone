@@ -121,8 +121,6 @@ jobs:
           name: Deploy backend
           command: |
             cd ~/project/.circleci/ansible
-#            echo $(curl -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" \
-#             --request GET https://api.memstash.io/values/backend_ip) >> ~/project/.circleci/ansible/inventory.txt
             $BACKEND_IP >> ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml --ssh-common-args='-o StrictHostKeyChecking=no'
       - destroy-environment
