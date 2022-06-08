@@ -17,11 +17,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setup custom environment variables
-          command: |
-            echo 'export BACKEND_IP=""' >> $BASH_ENV
-            source $BASH_ENV
-      - run:
           name: Install flake8 and pylama for code quality scan
           working_directory: ./app/rest_introduction_app
           command: pip install flake8 pylama
@@ -53,13 +48,10 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            MY_IP=$(aws ec2 describe-instances \
+            $BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
-            echo 'export BACKEND_IP=$MY_IP' >> $BASH_ENV
-            echo $BACKEND_IP
-            echo $BASH_ENV
       - destroy-environment
 
   configure-infrastructure:
