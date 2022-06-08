@@ -17,6 +17,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Setup custom environment variables"
+          command: echo 'export BACKEND_IP=""' >> $BASH_ENV
+      - run:
           name: Install flake8 and pylama for code quality scan
           working_directory: ./app/rest_introduction_app
           command: pip install flake8 pylama
@@ -48,14 +51,14 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
+            $BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
-            curl -H "Content-Type: text/plain" -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" \
-            --request PUT \
-            --data $BACKEND_IP \
-            https://api.memstash.io/values/backend_ip
+#            curl -H "Content-Type: text/plain" -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" \
+#            --request PUT \
+#            --data $BACKEND_IP \
+#            https://api.memstash.io/values/backend_ip
       - destroy-environment
 
   configure-infrastructure:
@@ -79,7 +82,8 @@ jobs:
           command: |
             cd .circleci/ansible
             echo "[web]" >> inventory.txt
-            URLS=$(curl -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" --request GET https://api.memstash.io/values/backend_ip)
+#            URLS=$(curl -H "token: 759b077a-c7a9-401c-a42d-d7fb6a530020" --request GET https://api.memstash.io/values/backend_ip)
+            URLS=$BACKEND_IP
             echo "$URLS" >> inventory.txt
             cat inventory.txt
       - run:
@@ -122,8 +126,9 @@ jobs:
           name: Deploy backend
           command: |
             cd ~/project/.circleci/ansible
-            echo $(curl -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" \
-             --request GET https://api.memstash.io/values/backend_ip) >> ~/project/.circleci/ansible/inventory.txt
+#            echo $(curl -H "token: 07ec3073-5a1c-4e57-af5e-87a6778e4e50" \
+#             --request GET https://api.memstash.io/values/backend_ip) >> ~/project/.circleci/ansible/inventory.txt
+            $BACKEND_IP >> ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml --ssh-common-args='-o StrictHostKeyChecking=no'
       - destroy-environment
 
