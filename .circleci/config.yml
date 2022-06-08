@@ -58,6 +58,8 @@ jobs:
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
             echo 'export BACKEND_IP=$MY_IP' >> $BASH_ENV
+            echo $BACKEND_IP
+            echo $BASH_ENV
       - destroy-environment
 
   configure-infrastructure:
@@ -82,6 +84,7 @@ jobs:
             cd .circleci/ansible
             echo "[web]" >> inventory.txt
             URLS=$BACKEND_IP
+            echo $BACKEND_IP
             echo "$URLS" >> inventory.txt
             cat inventory.txt
       - run:
