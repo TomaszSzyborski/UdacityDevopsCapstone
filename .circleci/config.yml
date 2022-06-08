@@ -48,12 +48,11 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            MY_IP=$(aws ec2 describe-instances \
+            BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
-            echo 'export BACKEND_IP=$MY_IP' >> $BASH_ENV
-            source $BASH_ENV
+            echo $BACKEND_IP
       - destroy-environment
 
   configure-infrastructure:
@@ -237,6 +236,8 @@ jobs:
 workflows:
   default:
     jobs:
+      - build:
+          context: BACKEND_IP
       - scan-backend
       - deploy-infrastructure:
           requires: [scan-backend]
