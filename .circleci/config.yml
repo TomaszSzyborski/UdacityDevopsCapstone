@@ -63,15 +63,13 @@ jobs:
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
             echo $BACKEND_IP
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             echo "[web]" >> inventory.txt
             URLS=$BACKEND_IP
             echo $BACKEND_IP
             echo "$URLS" >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-            cd ~/project/.circleci/ansible
-            $BACKEND_IP >> ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml --ssh-common-args='-o StrictHostKeyChecking=no'
             BACKEND_URL=$(aws ec2 describe-instances \
                       --query 'Reservations[*].Instances[*].PublicIpAddress' \
