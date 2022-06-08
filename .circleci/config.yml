@@ -31,12 +31,17 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
           name: Install dependencies
-          command: yum install -y tar gzip
+          command: |
+            apk add --update ansible
+            apk add --update tar gzip curl
+            pip install awscli
+      - attach_workspace:
+          at: ~/
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -53,24 +58,9 @@ jobs:
             --filters "Name=tag:project,Values=rest-learning-backend" \
             --output text)
             echo $BACKEND_IP
-      - destroy-environment
-
-  configure-infrastructure:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
       - add_ssh_keys:
           fingerprints:
             - "d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible
-            apk add --update tar gzip curl
-            pip install awscli
-      - attach_workspace:
-          at: ~/
       - run:
           name: Set up inventory file
           command: |
@@ -90,22 +80,9 @@ jobs:
           root: ~/
           paths:
             - ./project/.circleci/ansible/inventory.txt
-      - destroy-environment
-
-  deploy-backend:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
       - add_ssh_keys:
           fingerprints:
             - "d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible
-            apk add --update tar gzip curl
-            pip install awscli
       - run:
           name: install openssh
           command: |
@@ -122,19 +99,6 @@ jobs:
             cd ~/project/.circleci/ansible
             $BACKEND_IP >> ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml --ssh-common-args='-o StrictHostKeyChecking=no'
-      - destroy-environment
-
-  smoke-test:
-    docker:
-      - image: python:3.9-alpine3.13
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update tar gzip curl
-            apk add --update curl nodejs npm
-            pip install awscli
       - run:
           name: Backend smoke test.
           no_output_timeout: 5m
